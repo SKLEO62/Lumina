@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="96dp"
+    android:height="96dp"
+    android:viewportWidth="96"
+    android:viewportHeight="96">
+    <!-- Bookmark Ribbon Body -->
+    <path
+        android:pathData="M 32,16 L 64,16 A 4,4 0 0,1 68,20 L 68,80 L 48,64 L 28,80 L 28,20 A 4,4 0 0,1 32,16 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="28"
+                android:startY="16"
+                android:endX="68"
+                android:endY="80"
+                android:type="linear">
+                <item android:color="#F59E0B" android:offset="0.0" />
+                <item android:color="#D97706" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- Border -->
+    <path
+        android:pathData="M 32,16 L 64,16 A 4,4 0 0,1 68,20 L 68,80 L 48,64 L 28,80 L 28,20 A 4,4 0 0,1 32,16 Z"
+        android:strokeColor="#FDE68A"
+        android:strokeWidth="2"
+        android:fillColor="#00000000" />
+    <!-- Core Emblem Star inside Bookmark -->
+    <path
+        android:pathData="M 48,32 Q 48,44 38,44 Q 48,44 48,56 Q 48,44 58,44 Q 48,44 48,32 Z"
+        android:fillColor="#FFFFFF" />
+</vector>

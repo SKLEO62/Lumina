@@ -1,0 +1,96 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="360dp"
+    android:height="640dp"
+    android:viewportWidth="360"
+    android:viewportHeight="640">
+
+    <!-- Base Minimal Background -->
+    <path
+        android:pathData="M0,0h360v640h-360z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="135"
+                android:startColor="#0B0F19"
+                android:centerColor="#111827"
+                android:endColor="#080C14"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Large Geometric Facet 1 -->
+    <path
+        android:pathData="M-40,80 L220,-20 L320,180 L80,240 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="45"
+                android:startColor="#256366F1"
+                android:endColor="#054F46E5"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Large Geometric Facet 2 (Cyan Glass) -->
+    <path
+        android:pathData="M60,160 L380,110 L300,360 L0,320 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="135"
+                android:startColor="#3006B6D4"
+                android:endColor="#080284C7"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Geometric Facet 3 (Purple Core) -->
+    <path
+        android:pathData="M-20,290 L240,240 L360,450 L120,490 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="90"
+                android:startColor="#288B5CF6"
+                android:endColor="#056366F1"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Geometric Facet 4 (Emerald accent) -->
+    <path
+        android:pathData="M100,420 L400,380 L340,620 L40,580 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="180"
+                android:startColor="#2510B981"
+                android:endColor="#0506B6D4"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Glass Edge Lines with Frosted Light Reflex -->
+    <path android:strokeColor="#25FFFFFF" android:strokeWidth="1.2" android:pathData="M-40,80 L220,-20 L320,180" />
+    <path android:strokeColor="#3538BDF8" android:strokeWidth="1.4" android:pathData="M60,160 L380,110 L300,360" />
+    <path android:strokeColor="#30C084FC" android:strokeWidth="1.2" android:pathData="M-20,290 L240,240 L360,450" />
+    <path android:strokeColor="#256EE7B7" android:strokeWidth="1.2" android:pathData="M100,420 L400,380 L340,620" />
+
+    <!-- Ambient Floating Light Circles -->
+    <path
+        android:pathData="M180,180m-50,0a50,50 0,1 1,100 0a50,50 0,1 1,-100 0">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="0"
+                android:startColor="#20818CF8"
+                android:endColor="#006366F1"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+    <path
+        android:pathData="M240,420m-60,0a60,60 0,1 1,120 0a60,60 0,1 1,-120 0">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="0"
+                android:startColor="#2006B6D4"
+                android:endColor="#0038BDF8"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+</vector>

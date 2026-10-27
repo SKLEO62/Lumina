@@ -1,0 +1,107 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="360dp"
+    android:height="640dp"
+    android:viewportWidth="360"
+    android:viewportHeight="640">
+
+    <!-- Sky Gradient -->
+    <path
+        android:pathData="M0,0h360v640h-360z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="270"
+                android:startColor="#1E0B19"
+                android:centerColor="#331122"
+                android:endColor="#140915"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Sunset Sun with Warm Radial/Linear Glow -->
+    <path
+        android:pathData="M180,290m-64,0a64,64 0,1 1,128 0a64,64 0,1 1,-128 0">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="270"
+                android:startColor="#FFF59E0B"
+                android:centerColor="#FFE11D48"
+                android:endColor="#407C3AED"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Sun Halo / Aura -->
+    <path
+        android:pathData="M180,290m-100,0a100,100 0,1 1,200 0a100,100 0,1 1,-200 0">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="270"
+                android:startColor="#25F59E0B"
+                android:endColor="#00E11D48"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Dune Layer 1 (Furthest) -->
+    <path
+        android:pathData="M-20,380 Q100,310 210,360 T380,330 L380,640 L-20,640 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="270"
+                android:startColor="#4A1828"
+                android:endColor="#1F0B13"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Dune Layer 2 (Mid-distance) -->
+    <path
+        android:pathData="M-20,440 Q80,390 190,430 T380,390 L380,640 L-20,640 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="270"
+                android:startColor="#3B1120"
+                android:endColor="#15070E"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Dune Layer 3 (Foreground Wave) -->
+    <path
+        android:pathData="M-20,510 Q120,460 230,520 T380,480 L380,640 L-20,640 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="270"
+                android:startColor="#2B0C18"
+                android:endColor="#0B0307"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Crest Highlights -->
+    <path
+        android:strokeWidth="1.5"
+        android:pathData="M-20,380 Q100,310 210,360 T380,330">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:angle="0"
+                android:startColor="#40F59E0B"
+                android:centerColor="#80FB7185"
+                android:endColor="#40F59E0B"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+    <path
+        android:strokeWidth="1.5"
+        android:pathData="M-20,440 Q80,390 190,430 T380,390">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:angle="0"
+                android:startColor="#30F59E0B"
+                android:centerColor="#70FB7185"
+                android:endColor="#30F59E0B"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+</vector>

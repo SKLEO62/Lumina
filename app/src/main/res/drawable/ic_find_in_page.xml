@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="96dp"
+    android:height="96dp"
+    android:viewportWidth="96"
+    android:viewportHeight="96">
+    <!-- Document Page Outline -->
+    <path
+        android:pathData="M 28,16 L 56,16 L 68,28 L 68,76 A 4,4 0 0,1 64,80 L 28,80 A 4,4 0 0,1 24,76 L 24,20 A 4,4 0 0,1 28,16 Z"
+        android:strokeColor="#64748B"
+        android:strokeWidth="2.5"
+        android:fillColor="#1E293B" />
+    <!-- Page Lines -->
+    <path
+        android:pathData="M 32,36 L 50,36 M 32,46 L 60,46 M 32,56 L 60,56 M 32,66 L 46,66"
+        android:strokeColor="#475569"
+        android:strokeWidth="3"
+        android:strokeLineCap="round" />
+    <!-- Magnifier Lens -->
+    <path
+        android:pathData="M 58,54 A 14,14 0 1,1 57.9,54 Z"
+        android:strokeWidth="3.5"
+        android:strokeColor="#38BDF8"
+        android:fillColor="#0284C7" />
+    <!-- Magnifier Handle -->
+    <path
+        android:pathData="M 68,64 L 80,76"
+        android:strokeColor="#38BDF8"
+        android:strokeWidth="4.5"
+        android:strokeLineCap="round" />
+</vector>

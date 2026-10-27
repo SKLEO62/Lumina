@@ -1,0 +1,88 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="360dp"
+    android:height="640dp"
+    android:viewportWidth="360"
+    android:viewportHeight="640">
+
+    <!-- Deep Space Gradient Background -->
+    <path
+        android:pathData="M0,0h360v640h-360z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="135"
+                android:endColor="#070C18"
+                android:centerColor="#140D28"
+                android:startColor="#090614"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Nebula Cloud 1 (Purple Glow) -->
+    <path
+        android:pathData="M-40,120 Q60,40 180,100 T380,60 L400,320 Q280,380 160,300 T-40,320 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="45"
+                android:startColor="#448B5CF6"
+                android:endColor="#006366F1"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Nebula Cloud 2 (Cyan Aurora Core) -->
+    <path
+        android:pathData="M30,220 Q140,160 240,240 T400,200 L400,440 Q260,460 140,400 T-20,420 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="90"
+                android:startColor="#3306B6D4"
+                android:endColor="#0038BDF8"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Nebula Cloud 3 (Magenta Ambient Dust) -->
+    <path
+        android:pathData="M-60,380 Q100,320 220,410 T420,360 L420,620 Q240,640 100,580 T-60,600 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="180"
+                android:startColor="#30D946EF"
+                android:endColor="#004F46E5"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Central Glowing Star Burst -->
+    <path
+        android:fillColor="#80A78BFA"
+        android:pathData="M180,210 L183,235 L208,238 L183,241 L180,266 L177,241 L152,238 L177,235 Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M180,225 L182,236 L193,238 L182,240 L180,251 L178,240 L167,238 L178,236 Z" />
+
+    <!-- Bright Stars -->
+    <path android:fillColor="#E0FFFFFF" android:pathData="M52,84m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0" />
+    <path android:fillColor="#C0A5F3FC" android:pathData="M120,62m-1.5,0a1.5,1.5 0,1 1,3 0a1.5,1.5 0,1 1,-3 0" />
+    <path android:fillColor="#E0DDD6FE" android:pathData="M290,95m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0" />
+    <path android:fillColor="#A0FFFFFF" android:pathData="M330,150m-1.5,0a1.5,1.5 0,1 1,3 0a1.5,1.5 0,1 1,-3 0" />
+    <path android:fillColor="#FFFFFFFF" android:pathData="M78,190m-2.5,0a2.5,2.5 0,1 1,5 0a2.5,2.5 0,1 1,-5 0" />
+    <path android:fillColor="#80FFFFFF" android:pathData="M260,280m-1.5,0a1.5,1.5 0,1 1,3 0a1.5,1.5 0,1 1,-3 0" />
+    <path android:fillColor="#E0FBCFE8" android:pathData="M45,360m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0" />
+    <path android:fillColor="#C0A7F3D0" android:pathData="M315,390m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0" />
+    <path android:fillColor="#FFFFFFFF" android:pathData="M140,490m-2.5,0a2.5,2.5 0,1 1,5 0a2.5,2.5 0,1 1,-5 0" />
+    <path android:fillColor="#90DDD6FE" android:pathData="M275,520m-1.5,0a1.5,1.5 0,1 1,3 0a1.5,1.5 0,1 1,-3 0" />
+    <path android:fillColor="#E0FFFFFF" android:pathData="M60,560m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0" />
+    <path android:fillColor="#A0BAE6FD" android:pathData="M210,600m-1.5,0a1.5,1.5 0,1 1,3 0a1.5,1.5 0,1 1,-3 0" />
+
+    <!-- Constellation Lines -->
+    <path
+        android:strokeColor="#30FFFFFF"
+        android:strokeWidth="0.8"
+        android:pathData="M52,84 L120,62 L180,100 L290,95" />
+    <path
+        android:strokeColor="#25A5F3FC"
+        android:strokeWidth="0.8"
+        android:pathData="M78,190 L180,238 L260,280 L315,390" />
+</vector>

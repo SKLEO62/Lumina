@@ -1,0 +1,98 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="360dp"
+    android:height="640dp"
+    android:viewportWidth="360"
+    android:viewportHeight="640">
+
+    <!-- Sky Gradient -->
+    <path
+        android:pathData="M0,0h360v640h-360z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="270"
+                android:startColor="#06060D"
+                android:centerColor="#100A1F"
+                android:endColor="#05121E"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Glowing Cyber Sun / Orb -->
+    <path
+        android:pathData="M180,310m-70,0a70,70 0,1 1,140 0a70,70 0,1 1,-140 0">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="270"
+                android:startColor="#60F43F5E"
+                android:centerColor="#30D946EF"
+                android:endColor="#0506B6D4"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Sun horizontal scanlines -->
+    <path android:strokeColor="#50100A1F" android:strokeWidth="2.5" android:pathData="M110,290h140" />
+    <path android:strokeColor="#60100A1F" android:strokeWidth="3.5" android:pathData="M115,302h130" />
+    <path android:strokeColor="#70100A1F" android:strokeWidth="4.5" android:pathData="M125,316h110" />
+    <path android:strokeColor="#80100A1F" android:strokeWidth="5.5" android:pathData="M140,332h80" />
+
+    <!-- City Skyline Silhouettes -->
+    <path
+        android:fillColor="#D00B0918"
+        android:pathData="M0,350 L20,350 L20,290 L45,290 L45,350 L55,350 L55,270 L80,270 L80,250 L95,250 L95,350 L110,350 L110,310 L135,310 L135,350 L150,350 L150,230 L160,200 L170,230 L170,350 L195,350 L195,280 L220,280 L220,350 L235,350 L235,260 L255,260 L255,350 L270,350 L270,300 L290,300 L290,350 L315,350 L315,240 L335,240 L335,350 L360,350 L360,370 L0,370 Z" />
+
+    <!-- Skyline Neon Glow Edge -->
+    <path
+        android:strokeWidth="1.5"
+        android:pathData="M0,350 L20,350 L20,290 L45,290 L45,350 L55,350 L55,270 L80,270 L80,250 L95,250 L95,350 L110,350 L110,310 L135,310 L135,350 L150,350 L150,230 L160,200 L170,230 L170,350 L195,350 L195,280 L220,280 L220,350 L235,350 L235,260 L255,260 L255,350 L270,350 L270,300 L290,300 L290,350 L315,350 L315,240 L335,240 L335,350 L360,350">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:angle="0"
+                android:startColor="#06B6D4"
+                android:centerColor="#D946EF"
+                android:endColor="#38BDF8"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Perspective Grid Ground -->
+    <path
+        android:pathData="M0,370h360v270h-360z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="270"
+                android:startColor="#180A24"
+                android:endColor="#040710"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Grid Horizon Line -->
+    <path
+        android:strokeColor="#CC06B6D4"
+        android:strokeWidth="2"
+        android:pathData="M0,370h360" />
+
+    <!-- Grid Longitudinal Lines (Perspective converging to (180, 360)) -->
+    <path android:strokeColor="#3506B6D4" android:strokeWidth="1" android:pathData="M180,370 L-80,640" />
+    <path android:strokeColor="#4006B6D4" android:strokeWidth="1" android:pathData="M180,370 L-20,640" />
+    <path android:strokeColor="#5006B6D4" android:strokeWidth="1.2" android:pathData="M180,370 L40,640" />
+    <path android:strokeColor="#6006B6D4" android:strokeWidth="1.2" android:pathData="M180,370 L100,640" />
+    <path android:strokeColor="#8038BDF8" android:strokeWidth="1.5" android:pathData="M180,370 L160,640" />
+    <path android:strokeColor="#80D946EF" android:strokeWidth="1.5" android:pathData="M180,370 L200,640" />
+    <path android:strokeColor="#6006B6D4" android:strokeWidth="1.2" android:pathData="M180,370 L260,640" />
+    <path android:strokeColor="#5006B6D4" android:strokeWidth="1.2" android:pathData="M180,370 L320,640" />
+    <path android:strokeColor="#4006B6D4" android:strokeWidth="1" android:pathData="M180,370 L380,640" />
+    <path android:strokeColor="#3506B6D4" android:strokeWidth="1" android:pathData="M180,370 L440,640" />
+
+    <!-- Grid Transverse Lines (Exponential spacing) -->
+    <path android:strokeColor="#25D946EF" android:strokeWidth="0.8" android:pathData="M0,376h360" />
+    <path android:strokeColor="#30D946EF" android:strokeWidth="0.9" android:pathData="M0,384h360" />
+    <path android:strokeColor="#35D946EF" android:strokeWidth="1" android:pathData="M0,396h360" />
+    <path android:strokeColor="#40D946EF" android:strokeWidth="1.1" android:pathData="M0,412h360" />
+    <path android:strokeColor="#50D946EF" android:strokeWidth="1.2" android:pathData="M0,434h360" />
+    <path android:strokeColor="#60D946EF" android:strokeWidth="1.3" android:pathData="M0,466h360" />
+    <path android:strokeColor="#70D946EF" android:strokeWidth="1.4" android:pathData="M0,510h360" />
+    <path android:strokeColor="#80D946EF" android:strokeWidth="1.6" android:pathData="M0,570h360" />
+</vector>
