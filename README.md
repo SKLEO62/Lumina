@@ -1,42 +1,85 @@
-# Lumina Browser ✦
+<!-- LUMINA README · Neon Glass -->
+<p align="center">
+  <img src="docs/assets/lumina-banner.svg" alt="Lumina Browser — Neon Glass" width="100%" />
+</p>
 
-**Lumina Browser** is a next-generation Android web browser built with **Kotlin** and **Jetpack Compose**, featuring built-in Gemini AI intelligence, smart task extraction, custom vector brand icons, and a modern glassmorphism design.
+<h1 align="center">LUMINA BROWSER ✦</h1>
+<p align="center"><strong>Explore the web. Keep your focus.</strong></p>
+<p align="center">Android browser · Kotlin · Jetpack Compose · Material 3 · Gemini AI</p>
 
----
-
-## Key Features & Capabilities
-
-### ✦ Lumina Intellect (Gemini AI Integration)
-- **Standalone Full-Screen AI Chat**: Dedicated chat screen powered by Gemini for instant page summaries, key facts extraction, simplified explanations, page comparisons, fact-checking, translation, and custom Q&A.
-- **Smart Task Extraction**: Automatically parses web pages, recipes, and documentation to build an interactive task checklist with one-tap completion.
-
-### 🎨 Glassmorphism Hub & Personalization
-- **Translucent Start Screen**: Sleek, lightweight start hub with adjustable wallpaper blur and dimming.
-- **Wallpaper Gallery**: Choose from pre-bundled cosmic and abstract wallpapers or pick your own custom photo background.
-- **Theme Engine**: 5 distinct M3 color palettes (*Obsidian, Neon, Deep Space, Emerald, Light*) configurable directly in the browser settings.
-
-### 🛡️ Privacy & Lumina Shield (AdBlock)
-- **Ad & Tracker Blocking**: Built-in ad blocker to keep your browsing fast, clean, and private.
-- **Incognito & Secure Vault**: Secure password manager, history, downloads, and one-tap browsing data cleanup.
-
-### 🗂️ Navigation & Bookmarks
-- **Advanced Tab Switcher**: Manage regular and incognito tabs, grouped spaces, and pin tabs for quick access.
-- **Custom Brand Vector Icons**: Scalable vector logos for popular services (GitHub, Wikipedia, Telegram, Reddit, Habr, Yandex, X/Twitter, DuckDuckGo).
-- **Reader Mode & TTS**: Distraction-free reading view with built-in Text-to-Speech voice reader.
-- **QR Code & Notes**: Built-in QR code generator/scanner and sticky web notes tied to specific domains.
+<p align="center">
+  <a href="https://github.com/SKLEO62/Lumina">Repository</a> ·
+  <a href="docs/FEATURES.md">Features</a> ·
+  <a href="docs/BUILDING.md">Build guide</a> ·
+  <a href="docs/SCREENSHOTS.md">Screenshots</a>
+</p>
 
 ---
 
-## Technology Stack
-- **Language**: 100% Kotlin
-- **UI Framework**: Jetpack Compose & Material Design 3 (M3)
-- **AI Engine**: Firebase AI Logic & Gemini API (`gemini-3.8-flash` / `gemini-3.5-flash-lite`)
-- **Persistence**: SharedPreferences & StateFlow reactivity
-- **Architecture**: MVVM Clean Architecture
+## ✦ About Lumina
+
+**Lumina Browser** is an Android web browser built with **Kotlin**, **Jetpack Compose**, and **Material Design 3**. Its visual direction combines glassmorphism with a dark, cosmic atmosphere, while integrated Gemini-powered tools help turn web content into useful answers and tasks.
+
+This repository's README documents the project as described by its current source and project configuration. Feature availability and behavior may change as development continues.
+
+## ◈ What’s inside
+
+| Area | Documented capabilities |
+|---|---|
+| **Lumina Intellect** | Gemini-powered chat for page summaries, key facts, simplified explanations, comparisons, fact-checking, translation, and questions about content |
+| **Smart tasks** | Extract interactive task checklists from supported web content, including recipes and documentation |
+| **Glassmorphism home** | Translucent start screen with adjustable wallpaper blur and dimming |
+| **Personalization** | Built-in cosmic/abstract wallpapers, custom photo backgrounds, and five Material 3 palettes: Obsidian, Neon, Deep Space, Emerald, and Light |
+| **Lumina Shield** | Ad and tracker blocking |
+| **Private browsing tools** | Incognito tabs and a secure vault for passwords, history, and downloads, plus browsing-data cleanup |
+| **Tabs & organization** | Regular and incognito tabs, grouped spaces, and pinned tabs |
+| **Reading & utilities** | Reader mode, text-to-speech, QR code generation/scanning, and domain-linked web notes |
+
+See [the feature guide](docs/FEATURES.md) for the detailed list.
+
+## 🎨 Visual identity — Neon Glass
+
+Lumina's project presentation uses a near-black space canvas with electric cyan (**#00D9FF**) and violet (**#9B5CFF**) accents. The banner is an original SVG asset stored in the repository and scales cleanly on desktop and mobile.
+
+## 🧰 Technology
+
+- **Language:** Kotlin
+- **UI:** Jetpack Compose and Material Design 3
+- **AI integration:** Firebase AI Logic / Gemini API
+- **State and persistence:** SharedPreferences and StateFlow (as documented in the project README)
+- **Architecture:** MVVM / Clean Architecture (as documented in the project README)
+
+Build configuration currently declares **minSdk 24**, **targetSdk 36**, **versionCode 1**, and **versionName 1.0** in `app/build.gradle.kts`. These are configuration values, not a claim that a release APK has been built or tested.
+
+## 🚀 Getting started
+
+1. Clone or download this repository.
+2. Open the project in Android Studio with Android/Gradle support.
+3. Allow the IDE to sync the Gradle project and install the required Android SDK components.
+4. Review the [build guide](docs/BUILDING.md), configure any required Firebase/Gemini setup locally, then run on an emulator or Android device.
+
+> **Security note:** Never commit API keys, Firebase service credentials, signing keys, passwords, or local `.env` files. Use the provided `.env.example` as a reference and keep real secrets local.
+
+## 📱 Screenshots
+
+The repository currently uses a designed project banner; it does not claim that illustrative artwork is a real in-app screenshot. See [Screenshot guide](docs/SCREENSHOTS.md) for the recommended captures and the paths to add them when actual device/emulator screenshots are available.
+
+## 🗺️ Roadmap
+
+This README intentionally does not label unverified ideas as shipped features. Follow the repository's Issues and commit history for current work, bug reports, and planned improvements.
+
+## 🤝 Contributing
+
+Issues, bug reports, and focused pull requests are welcome. When reporting a problem, include:
+- Device or emulator and Android version
+- Steps to reproduce
+- Expected behavior and what happened instead
+- Relevant logs with tokens, personal data, and other secrets removed
+
+## 📄 License
+
+A license file was not confirmed during preparation of this README. Check the repository's `LICENSE` file before redistributing or reusing the project.
 
 ---
 
-## Getting Started & GitHub Sync
-1. Open the project in Android Studio or Google AI Studio.
-2. Build and run on an Android emulator or device (minSdk 26, targetSdk 35).
-3. Push updates to GitHub using the built-in **Push to GitHub** option in the AI Studio settings menu.
+<p align="center"><sub>Made with focus, curiosity, and a little cosmic glow. ✦</sub></p>
