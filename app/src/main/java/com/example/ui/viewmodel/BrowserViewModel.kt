@@ -2,7 +2,10 @@ package com.example.ui.viewmodel
 
 import android.net.Uri
 import android.util.Log
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.ai.LuminaAiService
 import com.example.data.model.AiActionType
@@ -32,7 +35,7 @@ data class BrowserUiState(
     val tabs: List<WebTab> = listOf(WebTab()),
     val activeTabId: String = "",
     val isTabSwitcherOpen: Boolean = false,
-    val isAiSheetOpen: Boolean = false,
+    val isAiChatOpen: Boolean = false,
     val aiUiState: AiUiState = AiUiState.Idle,
     val selectedAiAction: AiActionType = AiActionType.SUMMARIZE,
     val aiPromptInput: String = "",
@@ -56,7 +59,7 @@ data class BrowserUiState(
     val isWelcomeOpen: Boolean = true,
     val isPasswordManagerOpen: Boolean = false,
     val isDownloadsOpen: Boolean = false,
-    val isThemeSelectorOpen: Boolean = false,
+    val isSettingsOpen: Boolean = false,
     // Chrome Parity Features:
     val isFindInPageOpen: Boolean = false,
     val findQuery: String = "",
@@ -88,11 +91,33 @@ sealed interface WebViewAction {
 }
 
 class BrowserViewModel(
+    application: Application
+) : AndroidViewModel(application) {
     private val aiService: LuminaAiService = LuminaAiService()
-) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(BrowserUiState())
+    private val prefs: SharedPreferences = application.getSharedPreferences("lumina_browser_prefs", Context.MODE_PRIVATE)
+
+    private val _uiState = MutableStateFlow(
+        BrowserUiState(
+            isWelcomeOpen = !prefs.getBoolean("welcome_dismissed", false),
+            currentTheme = try {
+                LuminaThemeMode.valueOf(prefs.getString("current_theme", LuminaThemeMode.OBSIDIAN.name) ?: LuminaThemeMode.OBSIDIAN.name)
+            } catch (_: Exception) {
+                LuminaThemeMode.OBSIDIAN
+            },
+            searchEngine = try {
+                SearchEngine.valueOf(prefs.getString("search_engine", SearchEngine.GOOGLE.name) ?: SearchEngine.GOOGLE.name)
+            } catch (_: Exception) {
+                SearchEngine.GOOGLE
+            },
+            isAdBlockEnabled = prefs.getBoolean("adblock_enabled", true)
+        )
+    )
     val uiState: StateFlow<BrowserUiState> = _uiState.asStateFlow()
+
+    constructor(application: Application, aiService: LuminaAiService) : this(application) {
+        // aiService is initialized
+    }
 
     private var currentAiJob: Job? = null
 
@@ -622,20 +647,23 @@ class BrowserViewModel(
     }
 
     fun toggleAdBlock() {
-        _uiState.update { it.copy(isAdBlockEnabled = !it.isAdBlockEnabled) }
+        val newState = !_uiState.value.isAdBlockEnabled
+        try { prefs?.edit()?.putBoolean("adblock_enabled", newState)?.apply() } catch (_: Exception) {}
+        _uiState.update { it.copy(isAdBlockEnabled = newState) }
     }
 
-    // --- THEMES ---
+    // --- THEMES & SETTINGS ---
     fun setTheme(theme: LuminaThemeMode) {
-        _uiState.update { it.copy(currentTheme = theme, isThemeSelectorOpen = false) }
+        try { prefs?.edit()?.putString("current_theme", theme.name)?.apply() } catch (_: Exception) {}
+        _uiState.update { it.copy(currentTheme = theme) }
     }
 
-    fun openThemeSelector() {
-        _uiState.update { it.copy(isThemeSelectorOpen = true) }
+    fun openSettings() {
+        _uiState.update { it.copy(isSettingsOpen = true) }
     }
 
-    fun closeThemeSelector() {
-        _uiState.update { it.copy(isThemeSelectorOpen = false) }
+    fun closeSettings() {
+        _uiState.update { it.copy(isSettingsOpen = false) }
     }
 
     // --- ONBOARDING / WELCOME SCREEN ---
@@ -644,6 +672,9 @@ class BrowserViewModel(
     }
 
     fun dismissWelcome(dontShowAgain: Boolean) {
+        if (dontShowAgain) {
+            try { prefs?.edit()?.putBoolean("welcome_dismissed", true)?.apply() } catch (_: Exception) {}
+        }
         _uiState.update { it.copy(isWelcomeOpen = false) }
     }
 
@@ -706,19 +737,19 @@ class BrowserViewModel(
 
     // --- GEMINI AI INTEGRATION ---
 
-    fun openAiSheet(action: AiActionType = AiActionType.SUMMARIZE) {
+    fun openAiChat(action: AiActionType = AiActionType.SUMMARIZE) {
         _uiState.update {
             it.copy(
-                isAiSheetOpen = true,
+                isAiChatOpen = true,
                 selectedAiAction = action
             )
         }
         executeAiAction(action)
     }
 
-    fun closeAiSheet() {
+    fun closeAiChat() {
         currentAiJob?.cancel()
-        _uiState.update { it.copy(isAiSheetOpen = false) }
+        _uiState.update { it.copy(isAiChatOpen = false) }
     }
 
     fun onAiPromptInputChanged(input: String) {
@@ -869,6 +900,7 @@ class BrowserViewModel(
 
     // --- SEARCH ENGINE ---
     fun setSearchEngine(engine: SearchEngine) {
+        try { prefs?.edit()?.putString("search_engine", engine.name)?.apply() } catch (_: Exception) {}
         _uiState.update { it.copy(searchEngine = engine) }
     }
 

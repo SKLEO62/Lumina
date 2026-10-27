@@ -21,7 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.ui.components.AiAssistantSheet
+import com.example.ui.components.AiChatScreen
 import com.example.ui.components.BookmarksSheet
 import com.example.ui.components.ClearBrowsingDataDialog
 import com.example.ui.components.DownloadsSheet
@@ -34,8 +34,8 @@ import com.example.ui.components.Omnibar
 import com.example.ui.components.PasswordManagerSheet
 import com.example.ui.components.QrCodeSheet
 import com.example.ui.components.ReaderModeView
+import com.example.ui.components.SettingsSheet
 import com.example.ui.components.TabSwitcherView
-import com.example.ui.components.ThemeSelectorSheet
 import com.example.ui.components.WelcomeScreen
 import com.example.ui.theme.LuminaTheme
 import com.example.ui.viewmodel.BrowserViewModel
@@ -75,6 +75,21 @@ fun LuminaBrowserScreen(
                     viewModel.dismissWelcome(dontShowAgain)
                 }
             )
+        } else if (uiState.isAiChatOpen) {
+            // Standalone Dedicated AI Chat Full-Screen View
+            AiChatScreen(
+                activeTab = activeTab,
+                aiUiState = uiState.aiUiState,
+                selectedAction = uiState.selectedAiAction,
+                promptInput = uiState.aiPromptInput,
+                extractedTasks = uiState.extractedTasks,
+                onSelectAction = { action -> viewModel.executeAiAction(action) },
+                onPromptInputChange = viewModel::onAiPromptInputChanged,
+                onSendCustomQuery = viewModel::sendCustomAiQuery,
+                onToggleTask = viewModel::toggleTaskDone,
+                onAddTask = viewModel::addTask,
+                onDismiss = viewModel::closeAiChat
+            )
         } else {
             // Back handling
             BackHandler(
@@ -87,7 +102,7 @@ fun LuminaBrowserScreen(
                         uiState.isBookmarksOpen ||
                         uiState.isPasswordManagerOpen ||
                         uiState.isDownloadsOpen ||
-                        uiState.isThemeSelectorOpen
+                        uiState.isSettingsOpen
             ) {
                 when {
                     uiState.isReaderMode -> {
@@ -101,301 +116,288 @@ fun LuminaBrowserScreen(
                     uiState.isBookmarksOpen -> viewModel.closeBookmarks()
                     uiState.isPasswordManagerOpen -> viewModel.closePasswordManager()
                     uiState.isDownloadsOpen -> viewModel.closeDownloads()
-                    uiState.isThemeSelectorOpen -> viewModel.closeThemeSelector()
+                    uiState.isSettingsOpen -> viewModel.closeSettings()
                     uiState.isTabSwitcherOpen -> viewModel.toggleTabSwitcher()
                 }
             }
 
             Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            containerColor = MaterialTheme.colorScheme.background,
-            topBar = {
-                // Find in page bar at top of viewport
-                FindInPageBar(
-                    isVisible = uiState.isFindInPageOpen,
-                    query = uiState.findQuery,
-                    currentIndex = uiState.findCurrentIndex,
-                    totalMatches = uiState.findTotalMatches,
-                    onQueryChange = viewModel::onFindQueryChanged,
-                    onFindNext = { viewModel.findNext(forward = true) },
-                    onFindPrevious = { viewModel.findNext(forward = false) },
-                    onClose = viewModel::closeFindInPage
-                )
-            },
-            bottomBar = {
-                if (!uiState.isTabSwitcherOpen && !uiState.isReaderMode) {
-                    Omnibar(
-                        activeTab = activeTab,
-                        tabCount = uiState.tabs.size,
-                        isFocused = uiState.isOmnibarFocused,
-                        queryText = uiState.omnibarQueryText,
-                        isBookmarked = viewModel.isCurrentTabBookmarked(),
-                        onQueryChange = viewModel::onOmnibarQueryChanged,
-                        onFocusChange = viewModel::setOmnibarFocused,
-                        onSubmitUrl = viewModel::openUrl,
-                        onOpenAiSheet = { viewModel.openAiSheet() },
-                        onToggleTabs = viewModel::toggleTabSwitcher,
-                        onGoBack = viewModel::triggerGoBack,
-                        onGoForward = viewModel::triggerGoForward,
-                        onReload = viewModel::triggerReload,
-                        onToggleBookmark = viewModel::toggleBookmark,
-                        onToggleDesktop = viewModel::toggleDesktopMode,
-                        onToggleReaderMode = viewModel::toggleReaderMode,
-                        onOpenQrCode = viewModel::openQrCode,
-                        onOpenNotes = viewModel::openNotes,
-                        onNextTab = viewModel::switchToNextTab,
-                        onPrevTab = viewModel::switchToPreviousTab,
-                        onShare = {
-                            val url = activeTab?.url ?: return@Omnibar
-                            val sendIntent = Intent().apply {
-                                action = Intent.ACTION_SEND
-                                putExtra(Intent.EXTRA_TEXT, "${activeTab.title}\n$url")
-                                type = "text/plain"
-                            }
-                            val shareIntent = Intent.createChooser(sendIntent, "Поделиться ссылкой")
-                            context.startActivity(shareIntent)
-                        },
-                        onNewTab = { viewModel.createNewTab(isIncognito = false) },
-                        onNewIncognitoTab = { viewModel.createNewTab(isIncognito = true) },
-                        onOpenPasswordManager = viewModel::openPasswordManager,
-                        onOpenDownloads = viewModel::openDownloads,
-                        onOpenThemeSelector = viewModel::openThemeSelector,
-                        onOpenWelcome = viewModel::openWelcome,
-                        onOpenFindInPage = viewModel::openFindInPage,
-                        onOpenHistory = viewModel::openHistory,
-                        onOpenBookmarks = viewModel::openBookmarks,
-                        onOpenClearData = viewModel::openClearDataDialog,
-                        textZoom = uiState.textZoom,
-                        onCycleZoom = viewModel::cycleTextZoom,
-                        isAdBlockEnabled = uiState.isAdBlockEnabled,
-                        onToggleAdBlock = viewModel::toggleAdBlock
+                modifier = Modifier.fillMaxSize(),
+                containerColor = MaterialTheme.colorScheme.background,
+                topBar = {
+                    FindInPageBar(
+                        isVisible = uiState.isFindInPageOpen,
+                        query = uiState.findQuery,
+                        currentIndex = uiState.findCurrentIndex,
+                        totalMatches = uiState.findTotalMatches,
+                        onQueryChange = viewModel::onFindQueryChanged,
+                        onFindNext = { viewModel.findNext(forward = true) },
+                        onFindPrevious = { viewModel.findNext(forward = false) },
+                        onClose = viewModel::closeFindInPage
                     )
-                }
-            }
-        ) { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(
-                        top = innerPadding.calculateTopPadding(),
-                        bottom = innerPadding.calculateBottomPadding()
-                    )
-            ) {
-                Crossfade(targetState = uiState.isTabSwitcherOpen, label = "tab_switcher_crossfade") { isOpen ->
-                    if (isOpen) {
-                        TabSwitcherView(
-                            tabs = uiState.tabs,
-                            activeTabId = uiState.activeTabId,
-                            selectedSpace = uiState.selectedSpace,
-                            onSelectSpace = viewModel::selectSpace,
-                            onTogglePinTab = viewModel::togglePinTab,
-                            onSelectTab = viewModel::selectTab,
-                            onCloseTab = viewModel::closeTab,
-                            onCloseAll = { isIncognito -> viewModel.closeAllTabs(isIncognitoOnly = isIncognito) },
-                            onNewTab = { isIncognito -> viewModel.createNewTab(isIncognito = isIncognito) },
-                            onDismiss = viewModel::toggleTabSwitcher,
-                            recentlyClosedCount = uiState.recentlyClosedTabs.size,
-                            onRestoreLastClosed = viewModel::restoreLastClosedTab,
-                            onDuplicateTab = viewModel::duplicateTab
+                },
+                bottomBar = {
+                    if (!uiState.isTabSwitcherOpen && !uiState.isReaderMode) {
+                        Omnibar(
+                            activeTab = activeTab,
+                            tabCount = uiState.tabs.size,
+                            isFocused = uiState.isOmnibarFocused,
+                            queryText = uiState.omnibarQueryText,
+                            isBookmarked = viewModel.isCurrentTabBookmarked(),
+                            onQueryChange = viewModel::onOmnibarQueryChanged,
+                            onFocusChange = viewModel::setOmnibarFocused,
+                            onSubmitUrl = viewModel::openUrl,
+                            onOpenAiSheet = { viewModel.openAiChat() },
+                            onToggleTabs = viewModel::toggleTabSwitcher,
+                            onGoBack = viewModel::triggerGoBack,
+                            onGoForward = viewModel::triggerGoForward,
+                            onReload = viewModel::triggerReload,
+                            onToggleBookmark = viewModel::toggleBookmark,
+                            onToggleDesktop = viewModel::toggleDesktopMode,
+                            onToggleReaderMode = viewModel::toggleReaderMode,
+                            onOpenQrCode = viewModel::openQrCode,
+                            onOpenNotes = viewModel::openNotes,
+                            onNextTab = viewModel::switchToNextTab,
+                            onPrevTab = viewModel::switchToPreviousTab,
+                            onShare = {
+                                val url = activeTab?.url ?: return@Omnibar
+                                val sendIntent = Intent().apply {
+                                    action = Intent.ACTION_SEND
+                                    putExtra(Intent.EXTRA_TEXT, "${activeTab.title}\n$url")
+                                    type = "text/plain"
+                                }
+                                val shareIntent = Intent.createChooser(sendIntent, "Поделиться ссылкой")
+                                context.startActivity(shareIntent)
+                            },
+                            onNewTab = { viewModel.createNewTab(isIncognito = false) },
+                            onNewIncognitoTab = { viewModel.createNewTab(isIncognito = true) },
+                            onOpenPasswordManager = viewModel::openPasswordManager,
+                            onOpenDownloads = viewModel::openDownloads,
+                            onOpenSettings = viewModel::openSettings,
+                            onOpenWelcome = viewModel::openWelcome,
+                            onOpenFindInPage = viewModel::openFindInPage,
+                            onOpenHistory = viewModel::openHistory,
+                            onOpenBookmarks = viewModel::openBookmarks,
+                            onOpenClearData = viewModel::openClearDataDialog,
+                            textZoom = uiState.textZoom,
+                            onCycleZoom = viewModel::cycleTextZoom,
+                            isAdBlockEnabled = uiState.isAdBlockEnabled,
+                            onToggleAdBlock = viewModel::toggleAdBlock
                         )
-                    } else {
-                        val currentTab = activeTab
-                        if (currentTab?.url == "lumina://newtab" || currentTab == null) {
-                            NewTabScreen(
-                                bookmarks = uiState.bookmarks,
-                                tasks = uiState.extractedTasks,
-                                selectedWallpaper = uiState.selectedWallpaper,
-                                customWallpaperPath = uiState.customWallpaperPath,
-                                wallpaperDimming = uiState.wallpaperDimming,
-                                wallpaperBlur = uiState.wallpaperBlur,
-                                activeBookmarkCategory = uiState.activeBookmarkCategory,
-                                isBookmarkGridView = uiState.isBookmarkGridView,
-                                onOpenUrl = viewModel::openUrl,
-                                onOpenAiWithPrompt = { prompt ->
-                                    viewModel.openAiSheet()
-                                    viewModel.onAiPromptInputChanged(prompt)
-                                    viewModel.sendCustomAiQuery()
-                                },
-                                onOpenTasksSheet = {
-                                    viewModel.openAiSheet(com.example.data.model.AiActionType.EXTRACT_TASKS)
-                                },
-                                onAddBookmark = viewModel::addBookmark,
-                                onDeleteBookmark = viewModel::deleteBookmark,
-                                onTogglePinBookmark = viewModel::togglePinBookmark,
-                                onEditBookmark = viewModel::editBookmark,
-                                onSelectBookmarkCategory = viewModel::setBookmarkCategory,
-                                onToggleBookmarkViewMode = viewModel::toggleBookmarkViewMode,
-                                onSelectWallpaper = viewModel::setWallpaper,
-                                onSetCustomWallpaper = viewModel::setCustomWallpaperPath,
-                                onRemoveCustomWallpaper = viewModel::removeCustomWallpaper,
-                                onSetWallpaperDimming = viewModel::setWallpaperDimming,
-                                onSetWallpaperBlur = viewModel::setWallpaperBlur
+                    }
+                }
+            ) { innerPadding ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            top = innerPadding.calculateTopPadding(),
+                            bottom = innerPadding.calculateBottomPadding()
+                        )
+                ) {
+                    Crossfade(targetState = uiState.isTabSwitcherOpen, label = "tab_switcher_crossfade") { isOpen ->
+                        if (isOpen) {
+                            TabSwitcherView(
+                                tabs = uiState.tabs,
+                                activeTabId = uiState.activeTabId,
+                                selectedSpace = uiState.selectedSpace,
+                                onSelectSpace = viewModel::selectSpace,
+                                onTogglePinTab = viewModel::togglePinTab,
+                                onSelectTab = viewModel::selectTab,
+                                onCloseTab = viewModel::closeTab,
+                                onCloseAll = { isIncognito -> viewModel.closeAllTabs(isIncognitoOnly = isIncognito) },
+                                onNewTab = { isIncognito -> viewModel.createNewTab(isIncognito = isIncognito) },
+                                onDismiss = viewModel::toggleTabSwitcher,
+                                recentlyClosedCount = uiState.recentlyClosedTabs.size,
+                                onRestoreLastClosed = viewModel::restoreLastClosedTab,
+                                onDuplicateTab = viewModel::duplicateTab
                             )
                         } else {
-                            LuminaWebView(
-                                tab = currentTab,
-                                textZoom = uiState.textZoom,
-                                actionTrigger = uiState.webViewActionTrigger,
-                                onConsumeAction = viewModel::consumeActionTrigger,
-                                onUpdateTab = { title, url, canGoBack, canGoForward, isLoading, progress ->
-                                    viewModel.updateTabInfo(
-                                        tabId = currentTab.id,
-                                        title = title,
-                                        url = url,
-                                        canGoBack = canGoBack,
-                                        canGoForward = canGoForward,
-                                        isLoading = isLoading,
-                                        progress = progress
-                                    )
+                            val currentTab = activeTab
+                            if (currentTab?.url == "lumina://newtab" || currentTab == null) {
+                                NewTabScreen(
+                                    bookmarks = uiState.bookmarks,
+                                    tasks = uiState.extractedTasks,
+                                    selectedWallpaper = uiState.selectedWallpaper,
+                                    customWallpaperPath = uiState.customWallpaperPath,
+                                    wallpaperDimming = uiState.wallpaperDimming,
+                                    wallpaperBlur = uiState.wallpaperBlur,
+                                    activeBookmarkCategory = uiState.activeBookmarkCategory,
+                                    isBookmarkGridView = uiState.isBookmarkGridView,
+                                    onOpenUrl = viewModel::openUrl,
+                                    onOpenAiWithPrompt = { prompt ->
+                                        viewModel.openAiChat()
+                                        viewModel.onAiPromptInputChanged(prompt)
+                                        viewModel.sendCustomAiQuery()
+                                    },
+                                    onOpenTasksSheet = {
+                                        viewModel.openAiChat(com.example.data.model.AiActionType.EXTRACT_TASKS)
+                                    },
+                                    onAddBookmark = viewModel::addBookmark,
+                                    onDeleteBookmark = viewModel::deleteBookmark,
+                                    onTogglePinBookmark = viewModel::togglePinBookmark,
+                                    onEditBookmark = viewModel::editBookmark,
+                                    onSelectBookmarkCategory = viewModel::setBookmarkCategory,
+                                    onToggleBookmarkViewMode = viewModel::toggleBookmarkViewMode,
+                                    onSelectWallpaper = viewModel::setWallpaper,
+                                    onSetCustomWallpaper = viewModel::setCustomWallpaperPath,
+                                    onRemoveCustomWallpaper = viewModel::removeCustomWallpaper,
+                                    onSetWallpaperDimming = viewModel::setWallpaperDimming,
+                                    onSetWallpaperBlur = viewModel::setWallpaperBlur
+                                )
+                            } else {
+                                LuminaWebView(
+                                    tab = currentTab,
+                                    textZoom = uiState.textZoom,
+                                    actionTrigger = uiState.webViewActionTrigger,
+                                    onConsumeAction = viewModel::consumeActionTrigger,
+                                    onUpdateTab = { title, url, canGoBack, canGoForward, isLoading, progress ->
+                                        viewModel.updateTabInfo(
+                                            tabId = currentTab.id,
+                                            title = title,
+                                            url = url,
+                                            canGoBack = canGoBack,
+                                            canGoForward = canGoForward,
+                                            isLoading = isLoading,
+                                            progress = progress
+                                        )
+                                    },
+                                    onExtractPageText = { text ->
+                                        viewModel.updateTabPageText(currentTab.id, text)
+                                    },
+                                    onDownloadRequested = { url, fileName, mimeType, length ->
+                                        viewModel.addDownload(url, fileName, mimeType, length)
+                                    },
+                                    onFindResult = { activeMatchOrdinal, numberOfMatches ->
+                                        viewModel.updateFindResult(activeMatchOrdinal, numberOfMatches)
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+                    // Reader Mode distraction-free overlay
+                    AnimatedVisibility(
+                        visible = uiState.isReaderMode && activeTab != null,
+                        enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
+                        exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
+                    ) {
+                        if (activeTab != null) {
+                            ReaderModeView(
+                                tab = activeTab,
+                                isSpeaking = isSpeaking,
+                                onToggleSpeak = { textToRead ->
+                                    ttsHelper.toggleSpeak(textToRead)
                                 },
-                                onExtractPageText = { text ->
-                                    viewModel.updateTabPageText(currentTab.id, text)
-                                },
-                                onDownloadRequested = { url, fileName, mimeType, length ->
-                                    viewModel.addDownload(url, fileName, mimeType, length)
-                                },
-                                onFindResult = { activeMatchOrdinal, numberOfMatches ->
-                                    viewModel.updateFindResult(activeMatchOrdinal, numberOfMatches)
+                                onClose = {
+                                    ttsHelper.stop()
+                                    viewModel.toggleReaderMode()
                                 }
                             )
                         }
                     }
                 }
 
-                // Reader Mode distraction-free overlay
-                AnimatedVisibility(
-                    visible = uiState.isReaderMode && activeTab != null,
-                    enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
-                    exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
-                ) {
-                    if (activeTab != null) {
-                        ReaderModeView(
-                            tab = activeTab,
-                            isSpeaking = isSpeaking,
-                            onToggleSpeak = { textToRead ->
-                                ttsHelper.toggleSpeak(textToRead)
-                            },
-                            onClose = {
-                                ttsHelper.stop()
-                                viewModel.toggleReaderMode()
-                            }
-                        )
+                // QR Code Sharing Sheet
+                if (uiState.isQrCodeOpen && activeTab != null) {
+                    QrCodeSheet(
+                        url = activeTab.url,
+                        title = activeTab.title,
+                        onDismiss = viewModel::closeQrCode
+                    )
+                }
+
+                // Sticky Web Notes Sheet
+                if (uiState.isNotesOpen) {
+                    val currentUrl = activeTab?.url ?: ""
+                    val domain = try {
+                        android.net.Uri.parse(currentUrl).host ?: currentUrl
+                    } catch (e: Exception) {
+                        currentUrl
                     }
+                    NotesSheet(
+                        notes = uiState.notes,
+                        currentUrl = currentUrl,
+                        currentDomain = domain,
+                        onAddNote = { url, noteDomain, text ->
+                            viewModel.addNote(url, noteDomain, text)
+                        },
+                        onDeleteNote = viewModel::deleteNote,
+                        onDismiss = viewModel::closeNotes
+                    )
                 }
-            }
 
-            // Gemini AI Assistant Bottom Sheet
-            if (uiState.isAiSheetOpen) {
-                AiAssistantSheet(
-                    activeTab = activeTab,
-                    aiUiState = uiState.aiUiState,
-                    selectedAction = uiState.selectedAiAction,
-                    promptInput = uiState.aiPromptInput,
-                    extractedTasks = uiState.extractedTasks,
-                    onSelectAction = { action -> viewModel.executeAiAction(action) },
-                    onPromptInputChange = viewModel::onAiPromptInputChanged,
-                    onSendCustomQuery = viewModel::sendCustomAiQuery,
-                    onToggleTask = viewModel::toggleTaskDone,
-                    onAddTask = viewModel::addTask,
-                    onDismiss = viewModel::closeAiSheet
-                )
-            }
-
-            // QR Code Sharing Sheet
-            if (uiState.isQrCodeOpen && activeTab != null) {
-                QrCodeSheet(
-                    url = activeTab.url,
-                    title = activeTab.title,
-                    onDismiss = viewModel::closeQrCode
-                )
-            }
-
-            // Sticky Web Notes Sheet
-            if (uiState.isNotesOpen) {
-                val currentUrl = activeTab?.url ?: ""
-                val domain = try {
-                    android.net.Uri.parse(currentUrl).host ?: currentUrl
-                } catch (e: Exception) {
-                    currentUrl
+                // History Sheet
+                if (uiState.isHistoryOpen) {
+                    HistorySheet(
+                        history = uiState.history,
+                        onOpenUrl = viewModel::openUrl,
+                        onDeleteItem = viewModel::deleteHistoryItem,
+                        onClearAll = viewModel::clearAllHistory,
+                        onDismiss = viewModel::closeHistory
+                    )
                 }
-                NotesSheet(
-                    notes = uiState.notes,
-                    currentUrl = currentUrl,
-                    currentDomain = domain,
-                    onAddNote = { url, noteDomain, text ->
-                        viewModel.addNote(url, noteDomain, text)
-                    },
-                    onDeleteNote = viewModel::deleteNote,
-                    onDismiss = viewModel::closeNotes
-                )
-            }
 
-            // History Sheet
-            if (uiState.isHistoryOpen) {
-                HistorySheet(
-                    history = uiState.history,
-                    onOpenUrl = viewModel::openUrl,
-                    onDeleteItem = viewModel::deleteHistoryItem,
-                    onClearAll = viewModel::clearAllHistory,
-                    onDismiss = viewModel::closeHistory
-                )
-            }
+                // Bookmarks Sheet
+                if (uiState.isBookmarksOpen) {
+                    BookmarksSheet(
+                        bookmarks = uiState.bookmarks,
+                        currentTitle = activeTab?.title ?: "",
+                        currentUrl = activeTab?.url ?: "",
+                        onOpenUrl = viewModel::openUrl,
+                        onAddBookmark = viewModel::addBookmark,
+                        onDeleteBookmark = viewModel::deleteBookmark,
+                        onTogglePinBookmark = viewModel::togglePinBookmark,
+                        onDismiss = viewModel::closeBookmarks
+                    )
+                }
 
-            // Bookmarks Sheet
-            if (uiState.isBookmarksOpen) {
-                BookmarksSheet(
-                    bookmarks = uiState.bookmarks,
-                    currentTitle = activeTab?.title ?: "",
-                    currentUrl = activeTab?.url ?: "",
-                    onOpenUrl = viewModel::openUrl,
-                    onAddBookmark = viewModel::addBookmark,
-                    onDeleteBookmark = viewModel::deleteBookmark,
-                    onTogglePinBookmark = viewModel::togglePinBookmark,
-                    onDismiss = viewModel::closeBookmarks
-                )
-            }
+                // Password Manager Sheet
+                if (uiState.isPasswordManagerOpen) {
+                    val currentDomain = activeTab?.url ?: ""
+                    PasswordManagerSheet(
+                        passwords = uiState.passwords,
+                        currentSiteDomain = currentDomain,
+                        onSavePassword = viewModel::savePassword,
+                        onDeletePassword = viewModel::deletePassword,
+                        onDismiss = viewModel::closePasswordManager
+                    )
+                }
 
-            // Password Manager Sheet
-            if (uiState.isPasswordManagerOpen) {
-                val currentDomain = activeTab?.url ?: ""
-                PasswordManagerSheet(
-                    passwords = uiState.passwords,
-                    currentSiteDomain = currentDomain,
-                    onSavePassword = viewModel::savePassword,
-                    onDeletePassword = viewModel::deletePassword,
-                    onDismiss = viewModel::closePasswordManager
-                )
-            }
+                // Downloads Sheet
+                if (uiState.isDownloadsOpen) {
+                    DownloadsSheet(
+                        downloads = uiState.downloads,
+                        onDeleteDownload = viewModel::deleteDownload,
+                        onClearAll = viewModel::clearAllDownloads,
+                        onDismiss = viewModel::closeDownloads
+                    )
+                }
 
-            // Downloads Sheet
-            if (uiState.isDownloadsOpen) {
-                DownloadsSheet(
-                    downloads = uiState.downloads,
-                    onDeleteDownload = viewModel::deleteDownload,
-                    onClearAll = viewModel::clearAllDownloads,
-                    onDismiss = viewModel::closeDownloads
-                )
-            }
+                // Settings Sheet (including Themes & Privacy)
+                if (uiState.isSettingsOpen) {
+                    SettingsSheet(
+                        currentTheme = uiState.currentTheme,
+                        onSelectTheme = viewModel::setTheme,
+                        searchEngine = uiState.searchEngine,
+                        onSelectSearchEngine = viewModel::setSearchEngine,
+                        isAdBlockEnabled = uiState.isAdBlockEnabled,
+                        onToggleAdBlock = viewModel::toggleAdBlock,
+                        onOpenClearData = viewModel::openClearDataDialog,
+                        onOpenWelcome = viewModel::openWelcome,
+                        onDismiss = viewModel::closeSettings
+                    )
+                }
 
-            // Themes Selector Sheet
-            if (uiState.isThemeSelectorOpen) {
-                ThemeSelectorSheet(
-                    currentTheme = uiState.currentTheme,
-                    onSelectTheme = viewModel::setTheme,
-                    onDismiss = viewModel::closeThemeSelector
-                )
-            }
-
-            // Clear Data Dialog
-            if (uiState.isClearDataDialogOpen) {
-                ClearBrowsingDataDialog(
-                    onConfirmClear = { hist, cache, pass, down ->
-                        viewModel.clearBrowsingData(hist, cache, pass, down)
-                    },
-                    onDismiss = viewModel::closeClearDataDialog
-                )
-            }
-
+                // Clear Data Dialog
+                if (uiState.isClearDataDialogOpen) {
+                    ClearBrowsingDataDialog(
+                        onConfirmClear = { hist, cache, pass, down ->
+                            viewModel.clearBrowsingData(hist, cache, pass, down)
+                        },
+                        onDismiss = viewModel::closeClearDataDialog
+                    )
+                }
             }
         }
     }

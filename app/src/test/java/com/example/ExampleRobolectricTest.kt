@@ -81,7 +81,7 @@ class ExampleRobolectricTest {
         val customWp = com.example.data.model.LuminaWallpaper.CUSTOM
         assertEquals("Свое фото", customWp.title)
 
-        val vm = com.example.ui.viewmodel.BrowserViewModel()
+        val vm = com.example.ui.viewmodel.BrowserViewModel(ApplicationProvider.getApplicationContext())
         vm.setCustomWallpaperPath("/data/user/0/custom.jpg")
         assertEquals(com.example.data.model.LuminaWallpaper.CUSTOM, vm.uiState.value.selectedWallpaper)
         assertEquals("/data/user/0/custom.jpg", vm.uiState.value.customWallpaperPath)
@@ -105,7 +105,7 @@ class ExampleRobolectricTest {
 
     @Test
     fun `tab duplication and recently closed restore`() {
-        val vm = com.example.ui.viewmodel.BrowserViewModel()
+        val vm = com.example.ui.viewmodel.BrowserViewModel(ApplicationProvider.getApplicationContext())
         val initialTabId = vm.uiState.value.activeTabId
         assertNotNull(initialTabId)
 
@@ -123,7 +123,7 @@ class ExampleRobolectricTest {
 
     @Test
     fun `search engine and theme selection in viewmodel`() {
-        val vm = com.example.ui.viewmodel.BrowserViewModel()
+        val vm = com.example.ui.viewmodel.BrowserViewModel(ApplicationProvider.getApplicationContext())
         assertEquals(com.example.data.model.SearchEngine.GOOGLE, vm.uiState.value.searchEngine)
 
         vm.setSearchEngine(com.example.data.model.SearchEngine.DUCKDUCKGO)

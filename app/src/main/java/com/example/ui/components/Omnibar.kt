@@ -116,7 +116,7 @@ fun Omnibar(
     onNewIncognitoTab: () -> Unit,
     onOpenPasswordManager: () -> Unit,
     onOpenDownloads: () -> Unit,
-    onOpenThemeSelector: () -> Unit,
+    onOpenSettings: () -> Unit,
     onOpenWelcome: () -> Unit,
     onOpenFindInPage: () -> Unit,
     onOpenHistory: () -> Unit,
@@ -698,10 +698,10 @@ fun Omnibar(
                             )
 
                             DropdownMenuItem(
-                                text = { Text("Темы оформления") },
+                                text = { Text("Настройки браузера") },
                                 onClick = {
                                     showMenu = false
-                                    onOpenThemeSelector()
+                                    onOpenSettings()
                                 },
                                 leadingIcon = {
                                     Icon(

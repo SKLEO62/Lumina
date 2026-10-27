@@ -445,11 +445,11 @@ private fun AnimatedCosmicIllustration(
                 )
         )
 
-        // Central floating Emblem with gentle hover
+        // Central floating Emblem with Lumina text
         Box(
             modifier = Modifier
                 .offset(y = hoverY.dp)
-                .size(76.dp)
+                .size(88.dp)
                 .clip(CircleShape)
                 .background(
                     Brush.linearGradient(
@@ -465,11 +465,14 @@ private fun AnimatedCosmicIllustration(
                 .background(MaterialTheme.colorScheme.surface),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
-                imageVector = Icons.Default.RocketLaunch,
-                contentDescription = null,
-                tint = Color(0xFF6366F1),
-                modifier = Modifier.size(38.dp)
+            Text(
+                text = "Lumina",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Black,
+                    letterSpacing = 0.5.sp
+                ),
+                color = Color(0xFF6366F1),
+                textAlign = TextAlign.Center
             )
         }
     }

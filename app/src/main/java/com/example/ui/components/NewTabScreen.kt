@@ -283,9 +283,9 @@ fun NewTabScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 18.dp),
-            contentPadding = PaddingValues(top = 28.dp, bottom = 120.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+                .padding(horizontal = 16.dp),
+            contentPadding = PaddingValues(top = 16.dp, bottom = 100.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             // Top Bar: Wallpaper Pill + Quick Tools
             item {
@@ -305,11 +305,11 @@ fun NewTabScreen(
                             )
                             .clickable { isWallpaperSheetOpen = true }
                             .testTag("wallpaper_selector_pill"),
-                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.55f),
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
                         shape = RoundedCornerShape(20.dp)
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
@@ -381,22 +381,25 @@ fun NewTabScreen(
                             )
                             .padding(2.5.dp)
                             .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)),
+                            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.4f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.AutoAwesome,
-                            contentDescription = "Lumina Emblem",
-                            tint = Color(0xFF38BDF8),
-                            modifier = Modifier.size(32.dp)
+                        Text(
+                            text = "Lumina",
+                            style = MaterialTheme.typography.labelMedium.copy(
+                                fontWeight = FontWeight.Black,
+                                letterSpacing = 0.5.sp
+                            ),
+                            color = Color(0xFF38BDF8),
+                            textAlign = TextAlign.Center
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
                         text = "Lumina",
-                        style = MaterialTheme.typography.headlineMedium.copy(
+                        style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.sp
                         ),
@@ -409,7 +412,7 @@ fun NewTabScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.85f)
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
                     // Start Screen Search Input
                     OutlinedTextField(
@@ -456,8 +459,8 @@ fun NewTabScreen(
                         ),
                         shape = RoundedCornerShape(20.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
-                            unfocusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.65f),
+                            focusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.45f),
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
                             focusedBorderColor = Color(0xFF38BDF8),
                             unfocusedBorderColor = Color.White.copy(alpha = 0.2f)
                         )
