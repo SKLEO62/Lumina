@@ -60,6 +60,7 @@ data class BrowserUiState(
     val isPasswordManagerOpen: Boolean = false,
     val isDownloadsOpen: Boolean = false,
     val isSettingsOpen: Boolean = false,
+    val isMenuOpen: Boolean = false,
     // Chrome Parity Features:
     val isFindInPageOpen: Boolean = false,
     val findQuery: String = "",
@@ -664,6 +665,14 @@ class BrowserViewModel(
 
     fun closeSettings() {
         _uiState.update { it.copy(isSettingsOpen = false) }
+    }
+
+    fun openMenu() {
+        _uiState.update { it.copy(isMenuOpen = true) }
+    }
+
+    fun closeMenu() {
+        _uiState.update { it.copy(isMenuOpen = false) }
     }
 
     // --- ONBOARDING / WELCOME SCREEN ---

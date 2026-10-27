@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -44,7 +45,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.QrCode
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
@@ -126,6 +127,7 @@ fun Omnibar(
     onCycleZoom: () -> Unit,
     isAdBlockEnabled: Boolean,
     onToggleAdBlock: () -> Unit,
+    isTopBar: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -161,7 +163,7 @@ fun Omnibar(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .navigationBarsPadding()
+            .then(if (isTopBar) Modifier.statusBarsPadding() else Modifier.navigationBarsPadding())
             .padding(horizontal = 12.dp, vertical = 8.dp)
     ) {
         // Slim Loading Progress Bar
@@ -705,9 +707,9 @@ fun Omnibar(
                                 },
                                 leadingIcon = {
                                     Icon(
-                                        Icons.Default.Palette,
+                                        Icons.Default.Settings,
                                         contentDescription = null,
-                                        tint = Color(0xFFF43F5E)
+                                        tint = Color(0xFF38BDF8)
                                     )
                                 }
                             )

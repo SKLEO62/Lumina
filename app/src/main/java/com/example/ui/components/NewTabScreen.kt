@@ -368,30 +368,15 @@ fun NewTabScreen(
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(64.dp)
+                            .size(72.dp)
                             .clip(CircleShape)
-                            .background(
-                                Brush.linearGradient(
-                                    listOf(
-                                        Color(0xFF6366F1),
-                                        Color(0xFF06B6D4),
-                                        Color(0xFFA855F7)
-                                    )
-                                )
-                            )
-                            .padding(2.5.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.4f)),
-                        contentAlignment = Alignment.Center
+                            .border(2.dp, Color(0xFF38BDF8), CircleShape)
                     ) {
-                        Text(
-                            text = "Lumina",
-                            style = MaterialTheme.typography.labelMedium.copy(
-                                fontWeight = FontWeight.Black,
-                                letterSpacing = 0.5.sp
-                            ),
-                            color = Color(0xFF38BDF8),
-                            textAlign = TextAlign.Center
+                        Image(
+                            painter = painterResource(id = R.drawable.lumina_icon_img),
+                            contentDescription = "Lumina Icon",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
                         )
                     }
 

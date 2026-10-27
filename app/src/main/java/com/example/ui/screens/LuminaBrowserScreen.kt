@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +28,7 @@ import com.example.ui.components.ClearBrowsingDataDialog
 import com.example.ui.components.DownloadsSheet
 import com.example.ui.components.FindInPageBar
 import com.example.ui.components.HistorySheet
+import com.example.ui.components.LuminaBottomBar
 import com.example.ui.components.LuminaWebView
 import com.example.ui.components.NewTabScreen
 import com.example.ui.components.NotesSheet
@@ -34,6 +36,7 @@ import com.example.ui.components.Omnibar
 import com.example.ui.components.PasswordManagerSheet
 import com.example.ui.components.QrCodeSheet
 import com.example.ui.components.ReaderModeView
+import com.example.ui.components.LuminaMenuBottomSheet
 import com.example.ui.components.SettingsSheet
 import com.example.ui.components.TabSwitcherView
 import com.example.ui.components.WelcomeScreen
@@ -102,7 +105,8 @@ fun LuminaBrowserScreen(
                         uiState.isBookmarksOpen ||
                         uiState.isPasswordManagerOpen ||
                         uiState.isDownloadsOpen ||
-                        uiState.isSettingsOpen
+                        uiState.isSettingsOpen ||
+                        uiState.isMenuOpen
             ) {
                 when {
                     uiState.isReaderMode -> {
@@ -117,6 +121,7 @@ fun LuminaBrowserScreen(
                     uiState.isPasswordManagerOpen -> viewModel.closePasswordManager()
                     uiState.isDownloadsOpen -> viewModel.closeDownloads()
                     uiState.isSettingsOpen -> viewModel.closeSettings()
+                    uiState.isMenuOpen -> viewModel.closeMenu()
                     uiState.isTabSwitcherOpen -> viewModel.toggleTabSwitcher()
                 }
             }
@@ -125,64 +130,79 @@ fun LuminaBrowserScreen(
                 modifier = Modifier.fillMaxSize(),
                 containerColor = MaterialTheme.colorScheme.background,
                 topBar = {
-                    FindInPageBar(
-                        isVisible = uiState.isFindInPageOpen,
-                        query = uiState.findQuery,
-                        currentIndex = uiState.findCurrentIndex,
-                        totalMatches = uiState.findTotalMatches,
-                        onQueryChange = viewModel::onFindQueryChanged,
-                        onFindNext = { viewModel.findNext(forward = true) },
-                        onFindPrevious = { viewModel.findNext(forward = false) },
-                        onClose = viewModel::closeFindInPage
-                    )
+                    Column {
+                        FindInPageBar(
+                            isVisible = uiState.isFindInPageOpen,
+                            query = uiState.findQuery,
+                            currentIndex = uiState.findCurrentIndex,
+                            totalMatches = uiState.findTotalMatches,
+                            onQueryChange = viewModel::onFindQueryChanged,
+                            onFindNext = { viewModel.findNext(forward = true) },
+                            onFindPrevious = { viewModel.findNext(forward = false) },
+                            onClose = viewModel::closeFindInPage
+                        )
+                        if (!uiState.isTabSwitcherOpen && !uiState.isReaderMode && activeTab != null && activeTab.url != "lumina://newtab") {
+                            Omnibar(
+                                isTopBar = true,
+                                activeTab = activeTab,
+                                tabCount = uiState.tabs.size,
+                                isFocused = uiState.isOmnibarFocused,
+                                queryText = uiState.omnibarQueryText,
+                                isBookmarked = viewModel.isCurrentTabBookmarked(),
+                                onQueryChange = viewModel::onOmnibarQueryChanged,
+                                onFocusChange = viewModel::setOmnibarFocused,
+                                onSubmitUrl = viewModel::openUrl,
+                                onOpenAiSheet = { viewModel.openAiChat() },
+                                onToggleTabs = viewModel::toggleTabSwitcher,
+                                onGoBack = viewModel::triggerGoBack,
+                                onGoForward = viewModel::triggerGoForward,
+                                onReload = viewModel::triggerReload,
+                                onToggleBookmark = viewModel::toggleBookmark,
+                                onToggleDesktop = viewModel::toggleDesktopMode,
+                                onToggleReaderMode = viewModel::toggleReaderMode,
+                                onOpenQrCode = viewModel::openQrCode,
+                                onOpenNotes = viewModel::openNotes,
+                                onNextTab = viewModel::switchToNextTab,
+                                onPrevTab = viewModel::switchToPreviousTab,
+                                onShare = {
+                                    val url = activeTab.url
+                                    val sendIntent = Intent().apply {
+                                        action = Intent.ACTION_SEND
+                                        putExtra(Intent.EXTRA_TEXT, "${activeTab.title}\n$url")
+                                        type = "text/plain"
+                                    }
+                                    val shareIntent = Intent.createChooser(sendIntent, "Поделиться ссылкой")
+                                    context.startActivity(shareIntent)
+                                },
+                                onNewTab = { viewModel.createNewTab(isIncognito = false) },
+                                onNewIncognitoTab = { viewModel.createNewTab(isIncognito = true) },
+                                onOpenPasswordManager = viewModel::openPasswordManager,
+                                onOpenDownloads = viewModel::openDownloads,
+                                onOpenSettings = viewModel::openSettings,
+                                onOpenWelcome = viewModel::openWelcome,
+                                onOpenFindInPage = viewModel::openFindInPage,
+                                onOpenHistory = viewModel::openHistory,
+                                onOpenBookmarks = viewModel::openBookmarks,
+                                onOpenClearData = viewModel::openClearDataDialog,
+                                textZoom = uiState.textZoom,
+                                onCycleZoom = viewModel::cycleTextZoom,
+                                isAdBlockEnabled = uiState.isAdBlockEnabled,
+                                onToggleAdBlock = viewModel::toggleAdBlock
+                            )
+                        }
+                    }
                 },
                 bottomBar = {
                     if (!uiState.isTabSwitcherOpen && !uiState.isReaderMode) {
-                        Omnibar(
+                        LuminaBottomBar(
                             activeTab = activeTab,
                             tabCount = uiState.tabs.size,
-                            isFocused = uiState.isOmnibarFocused,
-                            queryText = uiState.omnibarQueryText,
-                            isBookmarked = viewModel.isCurrentTabBookmarked(),
-                            onQueryChange = viewModel::onOmnibarQueryChanged,
-                            onFocusChange = viewModel::setOmnibarFocused,
-                            onSubmitUrl = viewModel::openUrl,
-                            onOpenAiSheet = { viewModel.openAiChat() },
-                            onToggleTabs = viewModel::toggleTabSwitcher,
+                            isHomeSelected = activeTab?.url == "lumina://newtab" || activeTab == null,
                             onGoBack = viewModel::triggerGoBack,
                             onGoForward = viewModel::triggerGoForward,
-                            onReload = viewModel::triggerReload,
-                            onToggleBookmark = viewModel::toggleBookmark,
-                            onToggleDesktop = viewModel::toggleDesktopMode,
-                            onToggleReaderMode = viewModel::toggleReaderMode,
-                            onOpenQrCode = viewModel::openQrCode,
-                            onOpenNotes = viewModel::openNotes,
-                            onNextTab = viewModel::switchToNextTab,
-                            onPrevTab = viewModel::switchToPreviousTab,
-                            onShare = {
-                                val url = activeTab?.url ?: return@Omnibar
-                                val sendIntent = Intent().apply {
-                                    action = Intent.ACTION_SEND
-                                    putExtra(Intent.EXTRA_TEXT, "${activeTab.title}\n$url")
-                                    type = "text/plain"
-                                }
-                                val shareIntent = Intent.createChooser(sendIntent, "Поделиться ссылкой")
-                                context.startActivity(shareIntent)
-                            },
-                            onNewTab = { viewModel.createNewTab(isIncognito = false) },
-                            onNewIncognitoTab = { viewModel.createNewTab(isIncognito = true) },
-                            onOpenPasswordManager = viewModel::openPasswordManager,
-                            onOpenDownloads = viewModel::openDownloads,
-                            onOpenSettings = viewModel::openSettings,
-                            onOpenWelcome = viewModel::openWelcome,
-                            onOpenFindInPage = viewModel::openFindInPage,
-                            onOpenHistory = viewModel::openHistory,
-                            onOpenBookmarks = viewModel::openBookmarks,
-                            onOpenClearData = viewModel::openClearDataDialog,
-                            textZoom = uiState.textZoom,
-                            onCycleZoom = viewModel::cycleTextZoom,
-                            isAdBlockEnabled = uiState.isAdBlockEnabled,
-                            onToggleAdBlock = viewModel::toggleAdBlock
+                            onGoHome = { viewModel.openUrl("lumina://newtab") },
+                            onToggleTabs = viewModel::toggleTabSwitcher,
+                            onOpenMenu = viewModel::openMenu
                         )
                     }
                 }
@@ -386,6 +406,48 @@ fun LuminaBrowserScreen(
                         onOpenClearData = viewModel::openClearDataDialog,
                         onOpenWelcome = viewModel::openWelcome,
                         onDismiss = viewModel::closeSettings
+                    )
+                }
+
+                // Comprehensive Browser Menu Bottom Sheet
+                if (uiState.isMenuOpen) {
+                    LuminaMenuBottomSheet(
+                        activeTab = activeTab,
+                        isBookmarked = viewModel.isCurrentTabBookmarked(),
+                        textZoom = uiState.textZoom,
+                        isAdBlockEnabled = uiState.isAdBlockEnabled,
+                        onGoBack = viewModel::triggerGoBack,
+                        onGoForward = viewModel::triggerGoForward,
+                        onReload = viewModel::triggerReload,
+                        onToggleBookmark = viewModel::toggleBookmark,
+                        onNewTab = { viewModel.createNewTab(isIncognito = false) },
+                        onNewIncognitoTab = { viewModel.createNewTab(isIncognito = true) },
+                        onToggleReaderMode = viewModel::toggleReaderMode,
+                        onOpenQrCode = viewModel::openQrCode,
+                        onOpenNotes = viewModel::openNotes,
+                        onOpenFindInPage = viewModel::openFindInPage,
+                        onOpenHistory = viewModel::openHistory,
+                        onOpenBookmarks = viewModel::openBookmarks,
+                        onOpenPasswordManager = viewModel::openPasswordManager,
+                        onOpenDownloads = viewModel::openDownloads,
+                        onCycleZoom = viewModel::cycleTextZoom,
+                        onToggleAdBlock = viewModel::toggleAdBlock,
+                        onOpenSettings = viewModel::openSettings,
+                        onOpenWelcome = viewModel::openWelcome,
+                        onOpenClearData = viewModel::openClearDataDialog,
+                        onToggleDesktop = viewModel::toggleDesktopMode,
+                        onShare = {
+                            val url = activeTab?.url ?: ""
+                            val sendIntent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(Intent.EXTRA_TEXT, "${activeTab?.title}\n$url")
+                                type = "text/plain"
+                            }
+                            val shareIntent = Intent.createChooser(sendIntent, "Поделиться ссылкой")
+                            context.startActivity(shareIntent)
+                        },
+                        onOpenAiSheet = { viewModel.openAiChat() },
+                        onDismiss = viewModel::closeMenu
                     )
                 }
 
